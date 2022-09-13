@@ -22,7 +22,7 @@ public class CredencialServlet extends HttpServlet {
 
     @Inject
     CredencialBeanLocal credencialBean;
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,16 +37,10 @@ public class CredencialServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            Credencial cr = new Credencial();
-            cr.setId(1234);
-            cr.setAtivo(true);
-            cr.setEmail("thigas@email.com");
-            cr.setName("teste");
-            credencialBean.salvar(cr);
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CredencialServlet2</title>");
+            out.println("<title>Servlet CredencialServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet CredencialServlet at " + request.getContextPath() + "</h1>");
@@ -67,7 +61,8 @@ public class CredencialServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("CredencialForm.html").forward(request, response);
+        
     }
 
     /**
@@ -81,7 +76,22 @@ public class CredencialServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String id = request.getParameter("id");
+        String nome = request.getParameter("nome"); 
+        String email = request.getParameter("email"); 
+        String senha = request.getParameter("senha"); 
+        String ativo = request.getParameter("ativo");
+        
+        Credencial cr = new Credencial();
+           
+        cr.setId(Long.parseLong(id));
+        cr.setName(nome);
+        cr.setEmail(email);
+        cr.setPass(senha);
+        cr.setAtivo(Boolean.TRUE);
+        credencialBean.salvar(cr);
+        request.getRequestDispatcher("CredencialForm.html").forward(request, response);
+            
     }
 
     /**

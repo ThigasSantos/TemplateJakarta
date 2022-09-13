@@ -4,6 +4,7 @@
  */
 package com.mycompany.templatejakarta.resources;
 
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +14,7 @@ import javax.ejb.Local;
 @Local
 public interface CredencialBeanLocal {
     public void salvar(Credencial cr);
-    
+    public Credencial buscarId(long id);
+    public void removerId(long id);
+    public List<Credencial> buscarTodos();
 }
