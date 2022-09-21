@@ -27,18 +27,28 @@ public class CredencialBean implements CredencialBeanLocal{
        entityManager.persist(cr);
     }
     
+    @Override
     public Credencial buscarId(long id){
         return entityManager.find(Credencial.class,id);
     }
     
+    @Override
     public void removerId(long id){
         Credencial cr = entityManager.find(Credencial.class,id);
         entityManager.remove(cr);
     }
     
+    @Override
     public List<Credencial> buscarTodos(){
         TypedQuery q = entityManager.createQuery("SELECT p FROM Credencial p", Credencial.class);
         return q.getResultList();
+    }
+    
+    @Override
+    public void atualizar(Credencial cr){
+        Credencial cr2 = entityManager.find(Credencial.class,cr.getId());
+        cr.setPass(cr2.getPass());
+        entityManager.merge(cr);
     }
     
 }

@@ -18,4 +18,5 @@ public interface CredencialBeanLocal {
     public Credencial buscarId(long id);
     public void removerId(long id);
     public List<Credencial> buscarTodos();
+    public void atualizar(Credencial cr);
 }

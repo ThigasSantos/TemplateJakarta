@@ -1,5 +1,10 @@
 io\github\thigassantos\templatejakarta\credencial\CredencialBean.class
+io\github\thigassantos\templatejakarta\EditCredencial.class
 io\github\thigassantos\templatejakarta\ListCredencialServlet.class
 io\github\thigassantos\templatejakarta\credencial\Credencial.class
+io\github\thigassantos\templatejakarta\log\LogBeanLocal.class
 io\github\thigassantos\templatejakarta\CredencialServlet.class
 io\github\thigassantos\templatejakarta\credencial\CredencialBeanLocal.class
+io\github\thigassantos\templatejakarta\log\LogBean.class
+io\github\thigassantos\templatejakarta\log\Log.class
+io\github\thigassantos\templatejakarta\util\OperacaoBancoDados.class

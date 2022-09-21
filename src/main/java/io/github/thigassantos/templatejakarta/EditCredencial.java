@@ -4,13 +4,11 @@
  */
 package io.github.thigassantos.templatejakarta;
 
-import io.github.thigassantos.templatejakarta.credencial.CredencialBeanLocal;
-import io.github.thigassantos.templatejakarta.credencial.Credencial;
 import io.github.thigassantos.templatejakarta.credencial.Credencial;
 import io.github.thigassantos.templatejakarta.credencial.CredencialBeanLocal;
+import io.github.thigassantos.templatejakarta.log.LogBeanLocal;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,11 +20,15 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Tygsv
  */
-@WebServlet(name = "ListCredencialServlet", urlPatterns = {"/ListCredencialServlet"})
-public class ListCredencialServlet extends HttpServlet {
+@WebServlet(name = "EditCredencial", urlPatterns = {"/EditCredencial"})
+public class EditCredencial extends HttpServlet {
 
-     @Inject
+    @Inject
     CredencialBeanLocal credencialBean;
+
+    @Inject
+    LogBeanLocal logBean;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,18 +46,20 @@ public class ListCredencialServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ListCredencialServlet</title>");            
+            out.println("<title>Servlet EditCredencial</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<div id=\"divBusca\">");
-            out.println("<form method=\"get\" action=\"/TemplateJakarta-1.0-SNAPSHOT/EditCredencial\">");
-            out.println("<input type=\"text\" id=\"txtBusca\" placeholder=\"Buscar...\" name=\"idBusca\"/>");
-            out.println("<button id=\"btnBuscar\" type=\"submit\">Buscar</button> \n"+"  </form> ");
-            out.println("</div>");
-            out.println("<div id=\"lista\">");
-            List<Credencial> lista = credencialBean.buscarTodos();
-            lista.forEach(cr->{out.println("<p>"+cr.getId()+" - "+cr.getName()+"</p>");});
-            out.println("</div>");
+            String id = request.getParameter("idBusca");
+            long idBusca = Long.parseLong(id);
+            Credencial cr = credencialBean.buscarId(idBusca);
+            out.println("<form method=\"post\"> \n"
+                    + "  <label>ID</label> " + cr.getId() + " \n"
+                    + "  <label>Nome</label> <input type=\"text\" name=\"nome\" value=\"" + cr.getName() + "\"/> \n"
+                    + "  <label>Email</label> <input type=\"text\" name=\"email\"value=\"" + cr.getEmail() + "\"/> \n"
+                    + "  <label>Ativo</label> <input type=\"checkbox\" name=\"ativo\"" + (cr.getAtivo() ? "checked" : "") + "/> \n"
+                    + "  <button name=\"metodo\" value=\"atualizar\" type=\"submit\">Editar</button>\n"
+                    + "  <button name=\"metodo\" value=\"deletar\" type=\"submit\">Deletar</button>\n"
+                    + "</form> ");
             out.println("</body>");
             out.println("</html>");
         }
@@ -87,7 +91,29 @@ public class ListCredencialServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        String metodo = request.getParameter("metodo");
+        String id = request.getParameter("idBusca");
+        long idBusca = Long.parseLong(id);
+
+        if (metodo.equals("atualizar")) {
+
+            String nome = request.getParameter("nome");
+            String email = request.getParameter("email");
+            String ativo = request.getParameter("ativo");
+
+            Credencial cr = new Credencial();
+
+            cr.setId(Long.parseLong(id));
+            cr.setName(nome);
+            cr.setEmail(email);
+            cr.setAtivo(ativo != null);
+            
+            credencialBean.atualizar(cr);
+        }else{
+            credencialBean.removerId(idBusca);
+        }
+        response.sendRedirect("/TemplateJakarta-1.0-SNAPSHOT/ListCredencialServlet");
     }
 
     /**
